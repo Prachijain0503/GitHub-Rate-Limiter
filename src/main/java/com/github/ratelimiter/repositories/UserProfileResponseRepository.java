@@ -21,6 +21,11 @@ public class UserProfileResponseRepository {
         entityManager.persist(userProfileResponse);
     }
 
+    /**
+     *
+     * @param searchRequestId search request id
+     * @return List of searched git profile
+     */
     public List<UserProfileResponse> getAllGitProfiles(long searchRequestId) {
 
         return entityManager.createQuery(
@@ -29,6 +34,11 @@ public class UserProfileResponseRepository {
                 .getResultList();
     }
 
+    /**
+     *
+     * @param searchRequestId search request id
+     * @return count of searched git profile
+     */
     public int getGitProfileCount(long searchRequestId) {
         return getAllGitProfiles(searchRequestId).size();
     }

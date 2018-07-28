@@ -21,6 +21,15 @@ public class UserSearchService {
         this.userProfileResponseRepository = userProfileResponseRepository;
     }
 
+    /**
+     *
+     * @param name name of the user
+     * @param lastName last name of the user
+     * @param location location of the user
+     * @return information of git user
+     * @throws CustomException when no or more than one data found
+     * @throws Exception when some issue occurred during processing queued tasks to retry it
+     */
     public GitUser searchUser(String name, String lastName, String location) throws CustomException, Exception {
         return gitUserRepository.getGitUser(name, lastName, location);
     }

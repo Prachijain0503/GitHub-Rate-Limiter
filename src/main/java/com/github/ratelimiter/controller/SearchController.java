@@ -18,11 +18,23 @@ public class SearchController {
         this.searchService = searchService;
     }
 
+    /**
+     *
+     * @param profiles List of requested user profile
+     * @return Search request
+     * @throws Exception when some issue occurred during processing queued tasks
+     */
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public SearchRequest findUser(@RequestBody List<UserProfileRequest> profiles) throws Exception {
         return searchService.search(profiles);
     }
 
+    /**
+     *
+     * @param searchRequestId search request id
+     * @return  searched result
+     * @throws Exception when some issue occurred during processing queued tasks
+     */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public SearchResponse findUser(@RequestParam Long searchRequestId) throws Exception {
         return searchService.searchResponse(searchRequestId);

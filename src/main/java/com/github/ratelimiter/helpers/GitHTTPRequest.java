@@ -23,7 +23,7 @@ public class GitHTTPRequest {
         int responseCode = con.getResponseCode();
 
         if (responseCode == 200) {
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
             StringBuilder response = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {

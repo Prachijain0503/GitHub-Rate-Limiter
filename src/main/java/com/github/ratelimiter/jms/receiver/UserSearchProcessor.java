@@ -23,6 +23,12 @@ public class UserSearchProcessor {
         this.userSearchService = userSearchService;
     }
 
+    /**
+     *
+     * @param transaction each task of queue
+     * @throws Exception when some issue occurred during processing queued tasks
+     * @throws CustomException when no data or multiple data found for user search
+     */
     @Transactional
     @JmsListener(destination = "GitUserTransactionQueue")
     public void process(UserProfileRequest transaction) throws Exception, CustomException {

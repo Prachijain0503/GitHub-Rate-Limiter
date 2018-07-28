@@ -27,6 +27,15 @@ public class GitUserRepository {
         httpRequest = new GitHTTPRequest();
     }
 
+    /**
+     *
+     * @param name name of the user
+     * @param lastName last name of the user
+     * @param location location of the user
+     * @return searched user basic information
+     * @throws CustomException when no or more than one data found
+     * @throws Exception when some issue occurred during processing queued tasks to retry it
+     */
     SearchedGitUser searchGitHubUser(String name, String lastName, String location) throws Exception, CustomException {
         String url = GitURL.getUserUrl(name, lastName, location);
         String response = httpRequest.GET(url);
@@ -49,6 +58,13 @@ public class GitUserRepository {
         return searchedGitUsers.get(0);
     }
 
+    /**
+     *
+     * @param url repository url of the user
+     * @return List of repositories of user
+     * @throws Exception when some issue occurred during processing queued tasks to retry it
+     * @throws CustomException when no or more than one data found
+     */
     List<Repository> fetchRepos(String url) throws Exception, CustomException {
         String repositoryUrl = GitURL.getRepoUrl(url);
         String response = httpRequest.GET(repositoryUrl);
@@ -60,6 +76,13 @@ public class GitUserRepository {
                 });
     }
 
+    /**
+     *
+     * @param url Commit url for a particular repository
+     * @return List of commits on the repository
+     * @throws Exception when some issue occurred during processing queued tasks to retry it
+     * @throws CustomException when no or more than one data found
+     */
     List<Commits> fetchCommits(String url) throws Exception, CustomException {
         String commitUrl = GitURL.getCommitUrl(url);
         String response = httpRequest.GET(commitUrl);
@@ -75,6 +98,15 @@ public class GitUserRepository {
     }
 
 
+    /**
+     *
+     * @param name name of the user
+     * @param lastName last name of the user
+     * @param location location of the user
+     * @return information of git user
+     * @throws CustomException when no or more than one data found
+     * @throws Exception when some issue occurred during processing queued tasks to retry it
+     */
     public GitUser getGitUser(String name, String lastName, String location) throws Exception, CustomException {
         List<String> repos = new ArrayList<>();
         int totalCommits = 0;

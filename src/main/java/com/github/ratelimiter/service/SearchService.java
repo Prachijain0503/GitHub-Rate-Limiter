@@ -31,6 +31,11 @@ public class SearchService {
         this.userProfileResponseRepository = UserProfileResponseRepository;
     }
 
+    /**
+     *
+     * @param profiles List of requested user profile
+     * @return Search request
+     */
     @Transactional
     public SearchRequest search(List<UserProfileRequest> profiles) {
         SearchRequest request = new SearchRequest(profiles.size());
@@ -41,6 +46,11 @@ public class SearchService {
         return request;
     }
 
+    /**
+     *
+     * @param searchRequestId search request id
+     * @return searched result
+     */
     @Transactional
     public SearchResponse searchResponse(Long searchRequestId) {
         int gitProfileCount = userProfileResponseRepository.getGitProfileCount(searchRequestId);

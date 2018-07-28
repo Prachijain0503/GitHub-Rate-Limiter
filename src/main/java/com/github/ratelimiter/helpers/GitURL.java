@@ -9,8 +9,6 @@ public class GitURL {
 
     public static String getUserUrl(String name, String lastName, String location) throws UnsupportedEncodingException {
 
-        System.out.println(accessToken);
-
         String q = name+" "+lastName+ " in:fullname"+"+type:user"+ "+location:" + location + "&access_token="+accessToken;
         String url = "https://api.github.com/search/users?q=" + UriUtils.encodePath(q, "UTF-8");
         return url;

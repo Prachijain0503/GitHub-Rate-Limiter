@@ -6,7 +6,6 @@ import com.github.ratelimiter.Exception.RateLimitExceedException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLEncoder;
 
 public class HTTPRequest {
 
@@ -17,9 +16,9 @@ public class HTTPRequest {
 
         // optional default is GET
         con.setRequestMethod("GET");
-        String rateLimit= con.getHeaderField("X-RateLimit-Remaining");
+        String rateLimit = con.getHeaderField("X-RateLimit-Remaining");
 
-        if(rateLimit.equals("0"))
+        if (rateLimit.equals("0"))
             throw new RateLimitExceedException();
 
         int responseCode = con.getResponseCode();
@@ -38,9 +37,7 @@ public class HTTPRequest {
 
             //print result
             return response.toString();
-        }
-
-        else if(responseCode == 400){
+        } else if (responseCode == 400) {
             throw new BadRequestException();
         }
 

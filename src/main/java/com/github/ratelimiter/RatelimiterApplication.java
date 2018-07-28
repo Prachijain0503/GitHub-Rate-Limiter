@@ -1,6 +1,5 @@
 package com.github.ratelimiter;
 
-import com.github.ratelimiter.repositories.UserRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

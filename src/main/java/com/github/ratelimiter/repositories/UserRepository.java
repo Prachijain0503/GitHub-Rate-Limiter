@@ -1,16 +1,16 @@
 package com.github.ratelimiter.repositories;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.github.ratelimiter.Exception.*;
 import com.github.ratelimiter.HTTPRequest;
 import com.github.ratelimiter.dto.Commits;
 import com.github.ratelimiter.dto.GitURL;
 import com.github.ratelimiter.dto.GitUser;
 import com.github.ratelimiter.dto.Repository;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
@@ -36,11 +36,11 @@ public class UserRepository {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .readerFor(typeReference)
                 .readValue(mapper.readTree(response).path("items"));
-        if(gitUsers.size()>1)
+        if (gitUsers.size() > 1)
             throw new MultipleUserException();
-        else if(gitUsers.size()==0)
+        else if (gitUsers.size() == 0)
             throw new NoUserFoundException();
-    //no user or multi user
+        //no user or multi user
         return gitUsers.get(0);
     }
 
@@ -53,7 +53,7 @@ public class UserRepository {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .readValue(response, new TypeReference<List<Repository>>() {
                 });
-        if(repositoryList.size()==0)
+        if (repositoryList.size() == 0)
             throw new NoRepositoryFoundException();
         return repositoryList;
     }

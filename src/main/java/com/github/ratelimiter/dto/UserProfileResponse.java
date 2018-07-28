@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public class UserProfileResponse {
 
-    int statusCode;
+    HttpStatus statusCode;
     String msg;
     GitUser user;
 
@@ -15,7 +15,7 @@ public class UserProfileResponse {
         this.user = user;
     }
 
-    public int getStatusCode() {
+    public HttpStatus getStatusCode() {
         return statusCode;
     }
 

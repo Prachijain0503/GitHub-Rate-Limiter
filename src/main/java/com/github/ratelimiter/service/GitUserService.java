@@ -32,8 +32,7 @@ public class GitUserService {
             try {
                 GitUser user = get(profileReq.name, profileReq.lastName, profileReq.location);
                 responses.add(new UserProfileResponse(HttpStatus.OK, "success", user));
-            }
-            catch (BadRequestException e) {
+            } catch (BadRequestException e) {
                 responses.add(new UserProfileResponse(e.statusCode, e.toString(), null));
             } catch (MultipleUserException e) {
                 responses.add(new UserProfileResponse(HttpStatus.TOO_MANY_REQUESTS, e.toString(), null));

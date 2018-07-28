@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 public class GitUserController {
-            private GitUserService gitUserService;
+    private GitUserService gitUserService;
 
     @Autowired
     public GitUserController(GitUserService gitUserService) {
@@ -19,7 +19,7 @@ public class GitUserController {
     }
 
     @RequestMapping(value = "/user/{name}/{lastName}/{location}", method = RequestMethod.GET)
-    public com.github.ratelimiter.model.GitUser user (@PathVariable String name,@PathVariable String lastName,@PathVariable String location) throws Exception, MultipleUserException, NoRepositoryFoundException, BadRequestException, NoUserFoundException, RateLimitExceedException {
+    public com.github.ratelimiter.model.GitUser user(@PathVariable String name, @PathVariable String lastName, @PathVariable String location) throws Exception, MultipleUserException, NoRepositoryFoundException, BadRequestException, NoUserFoundException, RateLimitExceedException {
         return gitUserService.get(name, lastName, location);
     }
 

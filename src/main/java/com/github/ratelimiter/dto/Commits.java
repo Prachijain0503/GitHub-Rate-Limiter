@@ -13,7 +13,7 @@ public class Commits {
     }
 
     public boolean isUserCommit(String id) {
-        if(committer == null)
+        if (committer == null)
             return false;
         else
             return committer.id.equals(id);

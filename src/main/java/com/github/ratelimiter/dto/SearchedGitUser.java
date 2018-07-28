@@ -3,13 +3,13 @@ package com.github.ratelimiter.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class GitUser {
+public class SearchedGitUser {
 
     public String id;
     public String repoURL;
 
     @JsonCreator
-    public GitUser(@JsonProperty("id") String id, @JsonProperty("repos_url") String repoURL) {
+    public SearchedGitUser(@JsonProperty("id") String id, @JsonProperty("repos_url") String repoURL) {
         this.id = id;
         this.repoURL = repoURL;
     }
@@ -17,7 +17,7 @@ public class GitUser {
 
     @Override
     public String toString() {
-        return "GitUser{" +
+        return "SearchedGitUser{" +
                 "id=" + id +
                 ", repoURL='" + repoURL + '\'' +
                 '}';

@@ -46,7 +46,7 @@ public class GitUser {
 
     @Override
     public String toString() {
-        return "GitUser{" +
+        return "SearchedGitUser{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +

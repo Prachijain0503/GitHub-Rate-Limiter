@@ -5,13 +5,15 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.github.ratelimiter.Exception.*;
-import com.github.ratelimiter.HTTPRequest;
+import com.github.ratelimiter.Exception.CustomException;
+import com.github.ratelimiter.helpers.GitHubHTTPRequest;
 import com.github.ratelimiter.dto.Commits;
-import com.github.ratelimiter.dto.GitURL;
-import com.github.ratelimiter.dto.GitUser;
+import com.github.ratelimiter.helpers.GitURL;
+import com.github.ratelimiter.dto.SearchedGitUser;
 import com.github.ratelimiter.dto.Repository;
+import com.github.ratelimiter.model.GitUser;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,46 +21,46 @@ import java.util.List;
 @Configuration
 public class UserRepository {
 
-    HTTPRequest httpRequest;
+    private GitHubHTTPRequest httpRequest;
 
     public UserRepository() {
-        httpRequest = new HTTPRequest();
+        httpRequest = new GitHubHTTPRequest();
     }
 
-    GitUser searchGitHubUser(String name, String lastName, String location) throws Exception, MultipleUserException, NoUserFoundException, BadRequestException, RateLimitExceedException {
+    SearchedGitUser searchGitHubUser(String name, String lastName, String location) throws Exception, CustomException {
         String url = GitURL.getUserUrl(name, lastName, location);
         String response = httpRequest.GET(url);
         ObjectMapper mapper = new ObjectMapper();
 
         CollectionType typeReference =
-                TypeFactory.defaultInstance().constructCollectionType(List.class, GitUser.class);
-        List<GitUser> gitUsers = mapper
+                TypeFactory.defaultInstance().constructCollectionType(List.class, SearchedGitUser.class);
+
+        List<SearchedGitUser> searchedGitUsers = mapper
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .readerFor(typeReference)
                 .readValue(mapper.readTree(response).path("items"));
-        if (gitUsers.size() > 1)
-            throw new MultipleUserException();
-        else if (gitUsers.size() == 0)
-            throw new NoUserFoundException();
-        //no user or multi user
-        return gitUsers.get(0);
+
+        if (searchedGitUsers.size() > 1)
+            throw new CustomException(HttpStatus.NOT_FOUND, "Too many user found for this query.");
+
+         if (searchedGitUsers.size() == 0)
+            throw new CustomException(HttpStatus.NOT_FOUND, "User not found.");
+
+        return searchedGitUsers.get(0);
     }
 
-    List<Repository> fetchRepos(String url) throws Exception, BadRequestException, NoRepositoryFoundException, RateLimitExceedException {
+    List<Repository> fetchRepos(String url) throws Exception, CustomException {
         String repositoryUrl = GitURL.getRepoUrl(url);
         String response = httpRequest.GET(repositoryUrl);
         ObjectMapper mapper = new ObjectMapper();
 
-        List<Repository> repositoryList = mapper
+        return mapper
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .readValue(response, new TypeReference<List<Repository>>() {
                 });
-        if (repositoryList.size() == 0)
-            throw new NoRepositoryFoundException();
-        return repositoryList;
     }
 
-    List<Commits> fetchCommits(String url) throws Exception, BadRequestException, RateLimitExceedException {
+    List<Commits> fetchCommits(String url) throws Exception, CustomException{
         String commitUrl = GitURL.getCommitUrl(url);
         String response = httpRequest.GET(commitUrl);
 
@@ -66,26 +68,24 @@ public class UserRepository {
         CollectionType typeReference =
                 TypeFactory.defaultInstance().constructCollectionType(List.class, Commits.class);
 
-        List<Commits> commitList = mapper
+        return mapper
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .readerFor(typeReference)
                 .readValue(response);
-
-        return commitList;
     }
 
 
-    public com.github.ratelimiter.model.GitUser getGitUser(String name, String lastName, String location) throws Exception, NoUserFoundException, BadRequestException, MultipleUserException, NoRepositoryFoundException, RateLimitExceedException {
-        List<String> repos = new ArrayList<String>();
+    public GitUser getGitUser(String name, String lastName, String location) throws Exception, CustomException{
+        List<String> repos = new ArrayList<>();
         int totalCommits = 0;
 
-        GitUser user = searchGitHubUser(name, lastName, location);
+        SearchedGitUser user = searchGitHubUser(name, lastName, location);
         List<Repository> repositoryList = fetchRepos(user.repoURL);
 
         for (Repository repo : repositoryList) {
             repos.add(repo.reponame);
             if (repo.size > 0) {
-                List<Commits> commits = fetchCommits(repo.commitURL.replace("{/sha}", ""));
+                List<Commits> commits = fetchCommits(repo.commitURL);
 
                 for (Commits commit : commits) {
                     if (commit.isUserCommit(user.id)) {
@@ -94,7 +94,7 @@ public class UserRepository {
                 }
             }
         }
-        return new com.github.ratelimiter.model.GitUser(user.id, name, lastName, 1, repos, totalCommits);
+        return new GitUser(user.id, name, lastName, 1, repos, totalCommits);
     }
 
 }

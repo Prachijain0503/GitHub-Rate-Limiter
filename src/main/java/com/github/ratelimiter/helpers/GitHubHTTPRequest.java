@@ -1,4 +1,4 @@
-package com.github.ratelimiter;
+package com.github.ratelimiter.helpers;
 
 import com.github.ratelimiter.Exception.CustomException;
 import org.springframework.http.HttpStatus;

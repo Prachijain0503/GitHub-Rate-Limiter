@@ -1,6 +1,6 @@
 package com.github.ratelimiter.service;
 
-import com.github.ratelimiter.Exception.*;
+import com.github.ratelimiter.Exception.CustomException;
 import com.github.ratelimiter.dto.UserProfileRequest;
 import com.github.ratelimiter.dto.UserProfileResponse;
 import com.github.ratelimiter.model.GitUser;
@@ -21,27 +21,20 @@ public class GitUserService {
         this.repository = repository;
     }
 
-    public GitUser get(String name, String lastName, String location) throws Exception, MultipleUserException, NoRepositoryFoundException, BadRequestException, NoUserFoundException, RateLimitExceedException {
+    private GitUser get(String name, String lastName, String location) throws CustomException, Exception {
         return repository.getGitUser(name, lastName, location);
     }
 
-    public List<UserProfileResponse> find(List<UserProfileRequest> profiles) throws Exception {
+    public List<UserProfileResponse> find(List<UserProfileRequest> profiles) {
         List<UserProfileResponse> responses = new ArrayList<>();
 
         for (UserProfileRequest profileReq : profiles) {
             try {
                 GitUser user = get(profileReq.name, profileReq.lastName, profileReq.location);
                 responses.add(new UserProfileResponse(HttpStatus.OK, "success", user));
-            } catch (BadRequestException e) {
-                responses.add(new UserProfileResponse(e.statusCode, e.toString(), null));
-            } catch (MultipleUserException e) {
-                responses.add(new UserProfileResponse(HttpStatus.TOO_MANY_REQUESTS, e.toString(), null));
-            } catch (NoUserFoundException e) {
-                responses.add(new UserProfileResponse(e.statusCode, e.toString(), null));
-            } catch (NoRepositoryFoundException e) {
-                responses.add(new UserProfileResponse(e.statusCode, e.toString(), null));
-            } catch (RateLimitExceedException e) {
-                responses.add(new UserProfileResponse(e.statusCode, e.toString(), null));
+
+            } catch (CustomException e) {
+                responses.add(new UserProfileResponse(e.getStatusCode(), e.getMessage(), null));
             } catch (Exception e) {
                 System.out.println(e);
                 responses.add(new UserProfileResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null));

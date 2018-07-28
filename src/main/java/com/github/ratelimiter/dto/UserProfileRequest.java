@@ -4,8 +4,27 @@ public class UserProfileRequest {
     public String name;
     public String lastName;
     public String location;
+    public long searchRequestId;
+
+    public long getSearchRequestId() {
+        return searchRequestId;
+    }
+
+    public UserProfileRequest setSearchRequestId(long searchRequestId) {
+        this.searchRequestId = searchRequestId;
+        return this;
+    }
 
     public UserProfileRequest() {
+    }
+
+    @Override
+    public String toString() {
+        return "UserProfileRequest{" +
+                "name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", location='" + location + '\'' +
+                '}';
     }
 
     public UserProfileRequest(String name, String lastName, String location) {

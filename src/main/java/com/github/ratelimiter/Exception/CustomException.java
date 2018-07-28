@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 public class CustomException extends Throwable {
     HttpStatus statusCode;
 
-    public CustomException( HttpStatus statusCode, String message) {
+    public CustomException(HttpStatus statusCode, String message) {
         super(message);
         this.statusCode = statusCode;
     }

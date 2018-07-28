@@ -7,7 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-public class GitHubHTTPRequest {
+public class GitHTTPRequest {
 
     public String GET(String url) throws CustomException, Exception {
 

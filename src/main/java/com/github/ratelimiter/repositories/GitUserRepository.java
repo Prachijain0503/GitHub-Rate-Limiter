@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.github.ratelimiter.Exception.CustomException;
-import com.github.ratelimiter.helpers.GitHubHTTPRequest;
 import com.github.ratelimiter.dto.Commits;
-import com.github.ratelimiter.helpers.GitURL;
-import com.github.ratelimiter.dto.SearchedGitUser;
 import com.github.ratelimiter.dto.Repository;
+import com.github.ratelimiter.dto.SearchedGitUser;
+import com.github.ratelimiter.helpers.GitHTTPRequest;
+import com.github.ratelimiter.helpers.GitURL;
 import com.github.ratelimiter.model.GitUser;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -19,12 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-public class UserRepository {
+public class GitUserRepository {
 
-    private GitHubHTTPRequest httpRequest;
+    private GitHTTPRequest httpRequest;
 
-    public UserRepository() {
-        httpRequest = new GitHubHTTPRequest();
+    public GitUserRepository() {
+        httpRequest = new GitHTTPRequest();
     }
 
     SearchedGitUser searchGitHubUser(String name, String lastName, String location) throws Exception, CustomException {
@@ -43,7 +43,7 @@ public class UserRepository {
         if (searchedGitUsers.size() > 1)
             throw new CustomException(HttpStatus.NOT_FOUND, "Too many user found for this query.");
 
-         if (searchedGitUsers.size() == 0)
+        if (searchedGitUsers.size() == 0)
             throw new CustomException(HttpStatus.NOT_FOUND, "User not found.");
 
         return searchedGitUsers.get(0);
@@ -60,7 +60,7 @@ public class UserRepository {
                 });
     }
 
-    List<Commits> fetchCommits(String url) throws Exception, CustomException{
+    List<Commits> fetchCommits(String url) throws Exception, CustomException {
         String commitUrl = GitURL.getCommitUrl(url);
         String response = httpRequest.GET(commitUrl);
 
@@ -75,7 +75,7 @@ public class UserRepository {
     }
 
 
-    public GitUser getGitUser(String name, String lastName, String location) throws Exception, CustomException{
+    public GitUser getGitUser(String name, String lastName, String location) throws Exception, CustomException {
         List<String> repos = new ArrayList<>();
         int totalCommits = 0;
 
